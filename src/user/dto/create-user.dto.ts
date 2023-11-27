@@ -1,5 +1,4 @@
 import {
-  IsAlphanumeric,
   IsArray,
   IsEmail,
   IsNotEmpty,
@@ -8,18 +7,15 @@ import {
 } from 'class-validator';
 
 const passwordRegEx =
-  /^(?=.*[a-z])(?=.*[A-Z])(?=.*d)(?=.*[@$!%*?&])[A-Za-zd@$!%*?&]{8,20}$/;
+  /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,20}$/;
 
 export class CreateUserDto {
   @IsNotEmpty()
   @MinLength(3, { message: 'Username must have atleast 3 characters.' })
-  @IsAlphanumeric(null, {
-    message: 'Username does not allow other than alpha numeric chars.',
-  })
   username: string;
 
   @IsNotEmpty()
-  @IsEmail(null, { message: 'Please provide valid Email.' })
+  @IsEmail()
   email: string;
 
   @IsNotEmpty()
@@ -34,4 +30,6 @@ export class CreateUserDto {
 
   @IsArray()
   companies: string[];
+
+  token: string;
 }

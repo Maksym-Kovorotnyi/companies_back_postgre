@@ -16,4 +16,7 @@ export class User {
 
   @Column({ type: 'varchar', array: true })
   companies: string[];
+
+  @Column({ type: 'varchar', default: '' })
+  token: string;
 }

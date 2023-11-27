@@ -11,6 +11,7 @@ import {
 import { UserService } from './user.service';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
+import { GetUserDto } from './dto/get-user.dto';
 
 @Controller('auth')
 export class UserController {
@@ -21,11 +22,20 @@ export class UserController {
     return this.userService.signUp(createUserDto);
   }
 
-  @Get('signin/:id')
-  findOne(@Param('id') id: string) {
-    return this.userService.signIn(+id);
+  @Post('signin')
+  signIn(@Body() getUserDto: GetUserDto) {
+    return this.userService.signIn(getUserDto);
   }
 
+  @Get('logout/:id')
+  logout(@Param('id') id: string) {
+    return this.userService.logout(+id);
+  }
+
+  @Get('profile/:id')
+  currentUser(@Param('id') id: string) {
+    return this.userService.currentUser(+id);
+  }
   @Patch(':id')
   update(@Param('id') id: string, @Body() updateUserDto: UpdateUserDto) {
     return this.userService.update(+id, updateUserDto);

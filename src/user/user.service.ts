@@ -3,6 +3,7 @@ import {
   Injectable,
   ConflictException,
   NotFoundException,
+  UnauthorizedException,
 } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
@@ -10,6 +11,9 @@ import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { User } from './entities/user.entity';
 import * as bcrypt from 'bcrypt';
+import { GetUserDto } from './dto/get-user.dto';
+import * as jwt from 'jsonwebtoken';
+import { nanoid } from 'nanoid';
 
 @Injectable()
 export class UserService {
@@ -30,15 +34,49 @@ export class UserService {
     const hashedPassword = await bcrypt.hash(createUserDto.password, 10);
     user.password = hashedPassword;
     user.companies = [];
+    user.token = '';
     return this.userRepository.save(user);
   }
 
-  async signIn(id: number) {
+  async signIn(getUserDto: GetUserDto): Promise<User> {
+    const { email, password } = getUserDto;
+    const user = await this.userRepository.findOne({
+      where: { email: email },
+    });
+    if (!user) {
+      throw new NotFoundException(`User not found`);
+    }
+    const comparePassword = await bcrypt.compare(password, user.password);
+    if (!comparePassword) {
+      throw new UnauthorizedException(`Email or password are wrong`);
+    }
+    const token = jwt.sign({ userId: user.id }, nanoid(), { expiresIn: '1d' });
+
+    user.token = token;
+    this.userRepository.save(user);
+
+    return this.userRepository.save(user);
+  }
+
+  async logout(id: number) {
     const userCheck = await this.userRepository.findOneBy({ id });
     if (!userCheck) {
       throw new NotFoundException(`User not found`);
     }
-    return userCheck;
+    userCheck.token = '';
+    this.userRepository.save(userCheck);
+    return { message: 'Logout success' };
+  }
+
+  async currentUser(id: number) {
+    const userCheck = await this.userRepository.findOneBy({ id });
+    if (!userCheck) {
+      throw new NotFoundException(`User not found`);
+    }
+    if (!userCheck.token) {
+      return;
+    }
+    return this.userRepository.save(userCheck);
   }
 
   async update(id: number, updateUserDto: UpdateUserDto): Promise<User> {

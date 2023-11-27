@@ -5,7 +5,7 @@ import { IsEmail, IsNotEmpty } from 'class-validator';
 
 export class GetUserDto extends PartialType(CreateUserDto) {
   @IsNotEmpty()
-  @IsEmail(null, { message: 'Please provide valid Email.' })
+  @IsEmail()
   email: string;
 
   @IsNotEmpty()
