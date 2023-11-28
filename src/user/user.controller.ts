@@ -1,4 +1,3 @@
-/* eslint-disable prettier/prettier */
 import {
   Controller,
   Get,
@@ -7,11 +6,13 @@ import {
   Patch,
   Param,
   Delete,
+  UseGuards,
 } from '@nestjs/common';
 import { UserService } from './user.service';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
-import { GetUserDto } from './dto/get-user.dto';
+import { GetUserDto } from './dto/login-user.dto';
+import { JwtAuthGuard } from '../passport/jwt.guard';
 
 @Controller('auth')
 export class UserController {
@@ -28,20 +29,24 @@ export class UserController {
   }
 
   @Get('logout/:id')
+  @UseGuards(JwtAuthGuard)
   logout(@Param('id') id: string) {
     return this.userService.logout(+id);
   }
 
   @Get('profile/:id')
+  @UseGuards(JwtAuthGuard)
   currentUser(@Param('id') id: string) {
     return this.userService.currentUser(+id);
   }
   @Patch(':id')
+  @UseGuards(JwtAuthGuard)
   update(@Param('id') id: string, @Body() updateUserDto: UpdateUserDto) {
     return this.userService.update(+id, updateUserDto);
   }
 
   @Delete(':id')
+  @UseGuards(JwtAuthGuard)
   remove(@Param('id') id: string) {
     return this.userService.remove(+id);
   }

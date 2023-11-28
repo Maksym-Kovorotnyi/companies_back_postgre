@@ -1,7 +1,7 @@
 import {
-  IsArray,
   IsEmail,
   IsNotEmpty,
+  IsPhoneNumber,
   Matches,
   MinLength,
 } from 'class-validator';
@@ -11,12 +11,28 @@ const passwordRegEx =
 
 export class CreateUserDto {
   @IsNotEmpty()
+  @MinLength(3, { message: 'Firstname must have atleast 3 characters.' })
+  firstname: string;
+
+  @IsNotEmpty()
+  @MinLength(3, { message: 'Lastname must have atleast 3 characters.' })
+  lastname: string;
+
+  @IsNotEmpty()
   @MinLength(3, { message: 'Username must have atleast 3 characters.' })
-  username: string;
+  nickname: string;
 
   @IsNotEmpty()
   @IsEmail()
   email: string;
+
+  @IsNotEmpty()
+  @IsPhoneNumber('UA')
+  phone: string;
+
+  @IsNotEmpty()
+  @MinLength(10, { message: 'Description must be at least 10 characters long' })
+  description: string;
 
   @IsNotEmpty()
   @Matches(passwordRegEx, {
@@ -28,7 +44,6 @@ export class CreateUserDto {
   })
   password: string;
 
-  @IsArray()
   companies: string[];
 
   token: string;
