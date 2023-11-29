@@ -25,5 +25,5 @@ export class Company {
   type: string;
 
   @ManyToOne(() => User, (user) => user.companies)
-  user: number;
+  user: User;
 }

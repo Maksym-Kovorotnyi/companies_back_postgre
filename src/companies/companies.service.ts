@@ -32,22 +32,19 @@ export class CompaniesService {
     }
     const company = this.companyRepository.create({
       ...createCompanyDto,
-      user: user.id,
+      user,
     });
 
     return this.companyRepository.save(company);
   }
 
   async findAll(id: number): Promise<Company[]> {
-    return this.companyRepository
-      .createQueryBuilder('company')
-      .where('company.userId = :id', { id })
-      .getMany();
+    return this.companyRepository.find({ where: { user: { id } } });
   }
 
   async findOne(name: string, id: number): Promise<Company> {
     const company = await this.companyRepository.findOne({
-      where: { name: ILike(`%${name}%`) },
+      where: { name: ILike(`%${name}%`), user: { id } },
     });
     if (!company) {
       throw new NotFoundException(`Company with name '${name}' not found`);
