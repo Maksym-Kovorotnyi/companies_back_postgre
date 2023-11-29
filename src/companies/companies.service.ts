@@ -53,11 +53,30 @@ export class CompaniesService {
     return company;
   }
 
-  update(id: number, updateCompanyDto: UpdateCompanyDto) {
-    return `This action updates a #${id} company`;
+  async updateCompany(
+    id: number,
+    updateCompanyDto: UpdateCompanyDto,
+    userId: number,
+  ): Promise<Company> {
+    const company = await this.companyRepository.findOne({
+      where: { id, user: { id: userId } },
+    });
+    if (!company) {
+      throw new NotFoundException('Company not found');
+    }
+    Object.keys(updateCompanyDto).forEach((key) => {
+      company[key] = updateCompanyDto[key];
+    });
+    return this.companyRepository.save(company);
   }
 
-  remove(id: number) {
-    return `This action removes a #${id} company`;
+  async remove(id: number, userId: number) {
+    const company = await this.companyRepository.findOne({
+      where: { id, user: { id: userId } },
+    });
+    if (!company) {
+      throw new NotFoundException(`Company not found`);
+    }
+    return this.companyRepository.delete(id);
   }
 }

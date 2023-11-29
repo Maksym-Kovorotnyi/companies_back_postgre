@@ -34,17 +34,22 @@ export class CompaniesController {
   @Get(':name')
   findOne(@Param('name') name: string, @Req() req) {
     const id = req.user.sub;
-    console.log(req);
     return this.companiesService.findOne(name, id);
   }
 
   @Patch(':id')
-  update(@Param('id') id: string, @Body() updateCompanyDto: UpdateCompanyDto) {
-    return this.companiesService.update(+id, updateCompanyDto);
+  updateCompany(
+    @Param('id') id: string,
+    @Body() updateCompanyDto: UpdateCompanyDto,
+    @Req() req,
+  ) {
+    const userId = req.user.sub;
+    return this.companiesService.updateCompany(+id, updateCompanyDto, userId);
   }
 
   @Delete(':id')
-  remove(@Param('id') id: string) {
-    return this.companiesService.remove(+id);
+  remove(@Param('id') id: string, @Req() req) {
+    const userId = req.user.sub;
+    return this.companiesService.remove(+id, userId);
   }
 }
