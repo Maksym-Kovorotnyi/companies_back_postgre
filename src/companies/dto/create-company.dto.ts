@@ -1,4 +1,4 @@
-import { IsNotEmpty, IsString, IsNumber, MinLength } from 'class-validator';
+import { IsNotEmpty, IsString, MinLength } from 'class-validator';
 
 export class CreateCompanyDto {
   @IsNotEmpty()
@@ -14,8 +14,7 @@ export class CreateCompanyDto {
   serviceOfActivity: string;
 
   @IsNotEmpty()
-  @IsNumber()
-  numberOfEmployees: number;
+  numberOfEmployees: string;
 
   @IsNotEmpty()
   @IsString()

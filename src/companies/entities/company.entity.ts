@@ -16,7 +16,7 @@ export class Company {
   serviceOfActivity: string;
 
   @Column()
-  numberOfEmployees: number;
+  numberOfEmployees: string;
 
   @Column()
   description: string;

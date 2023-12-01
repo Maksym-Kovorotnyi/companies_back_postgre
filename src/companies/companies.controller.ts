@@ -31,13 +31,19 @@ export class CompaniesController {
     return this.companiesService.findAll(+id);
   }
 
-  @Get(':name')
+  @Get('search/:name')
   findOne(@Param('name') name: string, @Req() req) {
     const id = req.user.sub;
     return this.companiesService.findOne(name, id);
   }
 
-  @Patch(':id')
+  @Get('detail/:id')
+  getDetailInfo(@Param('id') id: string, @Req() req) {
+    const userId = req.user.sub;
+    return this.companiesService.getDetailInfo(+id, userId);
+  }
+
+  @Patch('update/:id')
   updateCompany(
     @Param('id') id: string,
     @Body() updateCompanyDto: UpdateCompanyDto,
@@ -47,7 +53,7 @@ export class CompaniesController {
     return this.companiesService.updateCompany(+id, updateCompanyDto, userId);
   }
 
-  @Delete(':id')
+  @Delete('delete/:id')
   remove(@Param('id') id: string, @Req() req) {
     const userId = req.user.sub;
     return this.companiesService.remove(+id, userId);

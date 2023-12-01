@@ -1,16 +1,6 @@
-import {
-  Controller,
-  Get,
-  Post,
-  Body,
-  Patch,
-  Param,
-  Delete,
-  UseGuards,
-} from '@nestjs/common';
+import { Controller, Get, Post, Body, UseGuards, Req } from '@nestjs/common';
 import { UserService } from './user.service';
 import { CreateUserDto } from './dto/create-user.dto';
-import { UpdateUserDto } from './dto/update-user.dto';
 import { GetUserDto } from './dto/login-user.dto';
 import { JwtAuthGuard } from '../passport/jwt.guard';
 
@@ -28,26 +18,17 @@ export class UserController {
     return this.userService.signIn(getUserDto);
   }
 
-  @Get('logout/:id')
+  @Get('logout')
   @UseGuards(JwtAuthGuard)
-  logout(@Param('id') id: string) {
-    return this.userService.logout(+id);
+  logout(@Req() req) {
+    const userId = req.user.sub;
+    return this.userService.logout(userId);
   }
 
-  @Get('profile/:id')
+  @Get('profile')
   @UseGuards(JwtAuthGuard)
-  currentUser(@Param('id') id: string) {
-    return this.userService.currentUser(+id);
-  }
-  @Patch(':id')
-  @UseGuards(JwtAuthGuard)
-  update(@Param('id') id: string, @Body() updateUserDto: UpdateUserDto) {
-    return this.userService.updateUser(+id, updateUserDto);
-  }
-
-  @Delete(':id')
-  @UseGuards(JwtAuthGuard)
-  remove(@Param('id') id: string) {
-    return this.userService.removeUser(+id);
+  currentUser(@Req() req) {
+    const userId = req.user.sub;
+    return this.userService.currentUser(userId);
   }
 }

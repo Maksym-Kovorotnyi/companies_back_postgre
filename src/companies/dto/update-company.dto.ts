@@ -1,6 +1,6 @@
 import { PartialType } from '@nestjs/mapped-types';
 import { CreateCompanyDto } from './create-company.dto';
-import { IsString, IsNumber, IsOptional } from 'class-validator';
+import { IsString, IsOptional } from 'class-validator';
 
 export class UpdateCompanyDto extends PartialType(CreateCompanyDto) {
   @IsOptional()
@@ -16,8 +16,7 @@ export class UpdateCompanyDto extends PartialType(CreateCompanyDto) {
   serviceOfActivity?: string;
 
   @IsOptional()
-  @IsNumber({}, { message: 'Number of employees should be a number' })
-  numberOfEmployees?: number;
+  numberOfEmployees?: string;
 
   @IsOptional()
   @IsString({ message: 'Description should be a string' })

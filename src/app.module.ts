@@ -13,7 +13,7 @@ import { Company } from './companies/entities/company.entity';
       type: 'postgres',
       host: 'localhost',
       port: 5432,
-      password: 'Asdafaga12!',
+      password: 'Qwerty1!',
       username: 'postgres',
       entities: [User, Company],
       database: 'companies',

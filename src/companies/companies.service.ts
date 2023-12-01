@@ -42,12 +42,23 @@ export class CompaniesService {
     return this.companyRepository.find({ where: { user: { id } } });
   }
 
-  async findOne(name: string, id: number): Promise<Company> {
-    const company = await this.companyRepository.findOne({
+  async findOne(name: string, id: number): Promise<Company[]> {
+    const company = await this.companyRepository.find({
       where: { name: ILike(`%${name}%`), user: { id } },
     });
-    if (!company) {
+    if (!company || company.length === 0) {
       throw new NotFoundException(`Company with name '${name}' not found`);
+    }
+
+    return company;
+  }
+
+  async getDetailInfo(id: number, userId): Promise<Company> {
+    const company = await this.companyRepository.findOne({
+      where: { id, user: { id: userId } },
+    });
+    if (!company) {
+      throw new NotFoundException(`Company not found`);
     }
 
     return company;
